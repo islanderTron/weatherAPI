@@ -1,34 +1,33 @@
-// function httpGet(url){
-//     var xmlhttp = new XMLHttpRequest();
-//     xmlhttp.open("GET", url, false);
-//     xmlhttp.send(null);
-//     return xmlhttp.responseText;
-// }
+let map, infoWindow;
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+    });
+    infoWindow = new google.maps.InfoWindow;
 
-// function getCurrentLocation() {
-//     // 
-// }
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
 
-// function CurrentForecast() {
-    
-// }
-
-// httpGet("http://api.wunderground.com/api/122e30171af0a6c6/forecast10day/q/CA/San_Francisco.json");
-
-class Weather {
-    constructor(standard, data) {
-        this.standard = standard;
-    }
-
-    get forecast() {
-        return this.Currentforecast();
-    }
-
-    Currentforecast() {
-        return  this.standard + "/" +    this.data;
+            //   console.log(pos);
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+        }, function () {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        //   Borwser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
     }
 }
 
-const test = new Weather("http://api.wunderground.com/api/122e30171af0a6c6", "/forecast10day/q/CA/San_Francisco.json");
-
-console.log(test);
+function handleLocationError(browserHasGeoLocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeoLocation ? 'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation');
+    infoWindow.open(map);
+}
