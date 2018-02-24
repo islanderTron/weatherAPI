@@ -31,7 +31,7 @@ var successCallback = function(position){
 navigator.geolocation.getCurrentPosition(successCallback);
 
 // Need to set up abstract json request function for variety functionality for weather.  
-function currentForeCast(city, state) {
+function currentForecast(city, state) {
   let method = "GET", async = true, url = "http://api.wunderground.com/api/122e30171af0a6c6/forecast/q/" + state + "/" + city +".json";
   request.open(method, url, async);
   request.onreadystatechange = function() {
