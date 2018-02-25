@@ -24,10 +24,14 @@ function getLocation(latitude,longitude) {
   requestURL(url, function() {
     // Set a current for state (2 letters) & city and pass it to functions at below.
     let data = JSON.parse(this.responseText);
-    let address = data.results[5];
-    let currentCity = address.address_components[1].long_name;
+
+    // Something weird with this especially with different location 
+    // Need to do some of testing with this issue 
+    let address = data.results[3];
+    let currentCity = address.address_components[0].long_name;
     let currentState = address.address_components[2].short_name;
     currentForecast(currentCity, currentState);
+    console.log(data);
   });
 };
 
@@ -36,12 +40,9 @@ function currentForecast(city, state) {
   requestURL(url, function() {
     let data = JSON.parse(this.responseText);
     let forecast = data.forecast;
-    console.log(data);
     forecast.simpleforecast.forecastday.forEach(element => {
       // let div_icon = document.createElement("div");
       // div_icon.setAttribute("class", "icon");
-
-
 
       // let img_url = element.icon_url;
       // layout(element.icon_url);
@@ -77,6 +78,7 @@ function layout(_img, fahrenheit, celsius) {
   _c.setAttribute('class', 'celsius')
   _c.textContent = celsius + " C";
 
+  // Appended 
   temp.appendChild(_f);
   temp.appendChild(_c);
 
