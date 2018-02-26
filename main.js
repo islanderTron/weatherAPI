@@ -24,9 +24,13 @@ function getLocation(latitude,longitude) {
   requestURL(url, function() {
     // Set a current for state (2 letters) & city and pass it to functions at below.
     let data = JSON.parse(this.responseText);
-    let address = data.results[5];
-    let currentCity = address.address_components[1].long_name;
+
+    // Something weird with this especially with different location 
+    // Need to do some of testing with this issue 
+    let address = data.results[3];
+    let currentCity = address.address_components[0].long_name;
     let currentState = address.address_components[2].short_name;
+
     encodeGeoLocation(currentCity, currentState);
   });
 };
@@ -46,6 +50,28 @@ function encodeGeoLocation(city, state) {
     let data = JSON.parse(this.responseText);
     let forecast = data.forecast;
     forecast.simpleforecast.forecastday.forEach(element => {
+
+    currentForecast(currentCity, currentState);
+    console.log(data);
+    });
+  });
+};
+
+function currentForecast(city, state) {
+  let url = "http://api.wunderground.com/api/122e30171af0a6c6/forecast/q/" + state + "/" + city +".json";
+  requestURL(url, function() {
+    let data = JSON.parse(this.responseText);
+    let forecast = data.forecast;
+    forecast.simpleforecast.forecastday.forEach(element => {
+      // let div_icon = document.createElement("div");
+      // div_icon.setAttribute("class", "icon");
+
+      // let img_url = element.icon_url;
+      // layout(element.icon_url);
+      layout(element.icon_url, element.high.fahrenheit, element.high.celsius);
+      // let imgEle = document.createElement("img");
+      // imgEle.setAttribute("src", img_url);
+      // document.querySelector(".icon").appendChild(imgEle);
 
       layoutForecast(element.icon_url, element.high.fahrenheit, element.high.celsius);
     });
@@ -74,6 +100,7 @@ function layoutForecast(_img, fahrenheit, celsius) {
   _c.setAttribute('class', 'celsius');
   _c.textContent = celsius + " C\u00B0";
 
+  // Appended 
   temp.appendChild(_f);
   temp.appendChild(_c);
 
