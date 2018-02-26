@@ -1,0 +1,25 @@
+body {
+  width: 500px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: "Avenir","Roboto","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  background: #03a9f4ab; }
+
+#content {
+  background-color: #fff;
+  border-radius: 5px;
+  min-height: 300px;
+  padding: 10px;
+  margin-top: 75px; }
+
+.current {
+  text-align: center; }
+
+.forecast {
+  display: flex;
+  flex-wrap: wrap; }
+  .forecast .forecast_wrapper {
+    flex: calc(100%/4);
+    text-align: center; }
+
+/*# sourceMappingURL=output.css.map */

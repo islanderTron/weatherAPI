@@ -46,14 +46,12 @@ function encodeGeoLocation(city, state) {
     let data = JSON.parse(this.responseText);
     let forecast = data.forecast;
     forecast.simpleforecast.forecastday.forEach(element => {
-
       layoutForecast(element.icon_url, element.high.fahrenheit, element.high.celsius);
     });
   });
 };
 
 function layoutForecast(_img, fahrenheit, celsius) {
-  // console.log(_img);
   // set up a group for each day
   let forecast_wrapper = document.createElement('div');
   forecast_wrapper.setAttribute('class', 'forecast_wrapper');
@@ -66,11 +64,11 @@ function layoutForecast(_img, fahrenheit, celsius) {
   let temp = document.createElement('div');
   temp.setAttribute('class', 'temp');
 
-  let _f = document.createElement('p')
+  let _f = document.createElement('span')
   _f.setAttribute('class', 'fahrenheit');
-  _f.textContent = fahrenheit + " F\u00B0";
+  _f.textContent = fahrenheit + " F\u00B0/";
 
-  let _c = document.createElement('p');
+  let _c = document.createElement('span');
   _c.setAttribute('class', 'celsius');
   _c.textContent = celsius + " C\u00B0";
 
@@ -79,7 +77,7 @@ function layoutForecast(_img, fahrenheit, celsius) {
 
   forecast_wrapper.appendChild(img_url);
   forecast_wrapper.appendChild(temp);
-  document.getElementsByClassName('4daysforecast')[0].appendChild(forecast_wrapper);
+  document.getElementsByClassName('forecast')[0].appendChild(forecast_wrapper);
 }
 
 function layoutCurrentObserve(city, state, image, temp) {
