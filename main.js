@@ -27,35 +27,32 @@ function getLocation(latitude,longitude) {
     let address = data.results[5];
     let currentCity = address.address_components[1].long_name;
     let currentState = address.address_components[2].short_name;
-    currentForecast(currentCity, currentState);
+    encodeGeoLocation(currentCity, currentState);
   });
 };
 
-function currentForecast(city, state) {
-  let url = "http://api.wunderground.com/api/122e30171af0a6c6/forecast/q/" + state + "/" + city +".json";
-  requestURL(url, function() {
+function encodeGeoLocation(city, state) {
+  let forecastURL = "http://api.wunderground.com/api/122e30171af0a6c6/forecast/q/" + state + "/" + city +".json";
+
+  let currentForecast = "http://api.wunderground.com/api/122e30171af0a6c6/conditions/q/" + state + "/" + city + ".json"; 
+
+  requestURL(currentForecast, function() {
+    let data = JSON.parse(this.response);
+    let current_observe = data.current_observation;
+    layoutCurrentObserve(current_observe.display_location.city, current_observe.display_location.state, current_observe.icon_url, current_observe.temperature_string);
+  });
+
+  requestURL(forecastURL, function() {
     let data = JSON.parse(this.responseText);
     let forecast = data.forecast;
-    console.log(data);
     forecast.simpleforecast.forecastday.forEach(element => {
-      // let div_icon = document.createElement("div");
-      // div_icon.setAttribute("class", "icon");
 
-
-
-      // let img_url = element.icon_url;
-      // layout(element.icon_url);
-      layout(element.icon_url, element.high.fahrenheit, element.high.celsius);
-      // let imgEle = document.createElement("img");
-      // imgEle.setAttribute("src", img_url);
-      // document.querySelector(".icon").appendChild(imgEle);
-
-      // document.querySelector(".content").appendChild(div_icon);
+      layoutForecast(element.icon_url, element.high.fahrenheit, element.high.celsius);
     });
   });
 };
 
-function layout(_img, fahrenheit, celsius) {
+function layoutForecast(_img, fahrenheit, celsius) {
   // console.log(_img);
   // set up a group for each day
   let forecast_wrapper = document.createElement('div');
@@ -71,16 +68,34 @@ function layout(_img, fahrenheit, celsius) {
 
   let _f = document.createElement('p')
   _f.setAttribute('class', 'fahrenheit');
-  _f.textContent = fahrenheit + " F";
+  _f.textContent = fahrenheit + " F\u00B0";
 
   let _c = document.createElement('p');
-  _c.setAttribute('class', 'celsius')
-  _c.textContent = celsius + " C";
+  _c.setAttribute('class', 'celsius');
+  _c.textContent = celsius + " C\u00B0";
 
   temp.appendChild(_f);
   temp.appendChild(_c);
 
   forecast_wrapper.appendChild(img_url);
   forecast_wrapper.appendChild(temp);
-  document.getElementById('content').appendChild(forecast_wrapper);
+  document.getElementsByClassName('4daysforecast')[0].appendChild(forecast_wrapper);
+}
+
+function layoutCurrentObserve(city, state, image, temp) {
+  let currentLocation = document.createElement("h2");
+  currentLocation.setAttribute('id', 'currentLocation');
+  currentLocation.textContent = city + " " + state;
+
+  let img_url = document.createElement('img');
+  img_url.setAttribute('src', image);
+
+  let currentTemp = document.createElement("p");
+  currentTemp.setAttribute("id","currentTemp");
+  currentTemp.textContent = temp;
+
+  let currentClass = document.getElementsByClassName('current')[0];
+  currentClass.appendChild(currentLocation);
+  currentClass.appendChild(img_url);
+  currentClass.appendChild(currentTemp);
 }
