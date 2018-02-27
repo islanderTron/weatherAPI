@@ -22,4 +22,7 @@ body {
     flex: calc(100%/4);
     text-align: center; }
 
+.conditions {
+  margin-top: 0; }
+
 /*# sourceMappingURL=output.css.map */

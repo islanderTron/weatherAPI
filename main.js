@@ -41,19 +41,19 @@ function encodeGeoLocation(city, state) {
   requestURL(currentForecast, function() {
     let data = JSON.parse(this.response);
     let current_observe = data.current_observation;
-    layoutCurrentObserve(current_observe.display_location.city, current_observe.display_location.state, current_observe.icon_url, current_observe.temperature_string);
+    layoutCurrentObserve(current_observe.display_location.city, current_observe.display_location.state, current_observe.icon_url, current_observe.temperature_string, current_observe.weather);
   });
 
   requestURL(forecastURL, function() {
     let data = JSON.parse(this.responseText);
     let forecast = data.forecast;
     forecast.simpleforecast.forecastday.forEach(element => {
-      layoutForecast(element.icon_url, element.high.fahrenheit, element.high.celsius);
+      layoutForecast(element.icon_url, element.high.fahrenheit, element.high.celsius, element.conditions);
     });
   });
 };
 
-function layoutForecast(_img, fahrenheit, celsius) {
+function layoutForecast(_img, fahrenheit, celsius, conditions) {
   // set up a group for each day
   let forecast_wrapper = document.createElement('div');
   forecast_wrapper.setAttribute('class', 'forecast_wrapper');
@@ -61,6 +61,7 @@ function layoutForecast(_img, fahrenheit, celsius) {
   // set up img div 
   let img_url = document.createElement('img');
   img_url.setAttribute('src', _img);
+  img_url.setAttribute('alt', conditions);
 
   // set up a F degree | C degrees
   let temp = document.createElement('div');
@@ -74,6 +75,11 @@ function layoutForecast(_img, fahrenheit, celsius) {
   _c.setAttribute('class', 'celsius');
   _c.textContent = celsius + " C\u00B0";
 
+  let forecast_condition = document.createElement('p');
+  forecast_condition.setAttribute('class', 'conditions');
+  forecast_condition.textContent = conditions;
+ 
+  temp.appendChild(forecast_condition);
   temp.appendChild(_f);
   temp.appendChild(_c);
 
@@ -82,20 +88,25 @@ function layoutForecast(_img, fahrenheit, celsius) {
   document.getElementsByClassName('forecast')[0].appendChild(forecast_wrapper);
 }
 
-function layoutCurrentObserve(city, state, image, temp) {
+function layoutCurrentObserve(city, state, image, temp, conditions) {
   let currentLocation = document.createElement("h2");
   currentLocation.setAttribute('id', 'currentLocation');
-  currentLocation.textContent = city + " " + state;
+  currentLocation.textContent = city + ", " + state;
 
   let img_url = document.createElement('img');
-  img_url.setAttribute('src', image);
+  img_url.setAttribute('src', image); 
 
   let currentTemp = document.createElement("p");
   currentTemp.setAttribute("id","currentTemp");
   currentTemp.textContent = temp;
 
+  let forecast_condition = document.createElement('p');
+  forecast_condition.setAttribute('class', 'conditions');
+  forecast_condition.textContent = conditions;
+
   let currentClass = document.getElementsByClassName('current')[0];
   currentClass.appendChild(currentLocation);
   currentClass.appendChild(img_url);
+  currentClass.appendChild(forecast_condition);
   currentClass.appendChild(currentTemp);
 }
