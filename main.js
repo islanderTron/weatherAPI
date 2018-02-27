@@ -23,10 +23,12 @@ function getLocation(latitude,longitude) {
   let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude +"&key=AIzaSyAYSzN7cCjKN9WE5YqrYyv-ckUv-l-D95k";
   requestURL(url, function() {
     // Set a current for state (2 letters) & city and pass it to functions at below.
+
+    // Need to do some of testing with different location and check with this data structure
     let data = JSON.parse(this.responseText);
-    let address = data.results[5];
-    let currentCity = address.address_components[1].long_name;
-    let currentState = address.address_components[2].short_name;
+    let address = data.results[0];
+    let currentCity = address.address_components[3].long_name;
+    let currentState = address.address_components[5].short_name;
     encodeGeoLocation(currentCity, currentState);
   });
 };
